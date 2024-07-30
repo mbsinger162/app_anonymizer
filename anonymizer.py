@@ -20,8 +20,8 @@ def load_nlp_model():
 
 nlp = load_nlp_model()
 
-def get_default_font():
-    return ImageFont.load_default()
+def get_default_font(size=30):
+    return ImageFont.load_default().font_variant(size=size)
 
 def get_full_name(text):
     # Look for the full name after "Name:" in both formats
