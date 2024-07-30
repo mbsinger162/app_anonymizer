@@ -11,6 +11,8 @@ import random
 import string
 from PIL import Image, ImageDraw, ImageFont
 
+st.set_option('client.showErrorDetails', True)
+
 @st.cache_resource
 def load_nlp_model():
     import spacy
@@ -19,7 +21,7 @@ def load_nlp_model():
 nlp = load_nlp_model()
 
 def get_default_font():
-    return "/Library/Fonts/Times.ttc"
+    return "sans-serif"
 
 
 def get_full_name(text):
