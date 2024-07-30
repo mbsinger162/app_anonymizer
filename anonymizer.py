@@ -21,8 +21,7 @@ def load_nlp_model():
 nlp = load_nlp_model()
 
 def get_default_font():
-    return "sans-serif"
-
+    return ImageFont.load_default()
 
 def get_full_name(text):
     # Look for the full name after "Name:" in both formats
