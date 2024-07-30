@@ -146,9 +146,7 @@ def anonymize_pdf(pdf_path, output_path, unique_number, progress_bar):
         name_variations = []
     
     # Get default font
-    font_path = get_default_font()
-    if not font_path:
-        st.warning("Could not find a suitable font. The 'Name: [unique_number]' text will not be added.")
+    font = get_default_font(size=30)
     
     # Process each page
     for i, image in enumerate(images):
@@ -186,28 +184,20 @@ def anonymize_pdf(pdf_path, output_path, unique_number, progress_bar):
                     # Draw black rectangle over the entire email
                     draw.rectangle([x1, y1, x2, y2], fill="black")
         
-        # Add "Name: [unique_number]" to the top center of the first page
-        if i == 0 and font_path:
-            # Choose a font and size
-            font_size = 30
-            try:
-                font = ImageFont.truetype(font_path, font_size)
-            except IOError:
-                st.warning(f"Could not load font from {font_path}. The 'Name: [unique_number]' text will not be added.")
-                font = None
+        # Add "ID: [unique_number]" to the top center of the first page
+        if i == 0:
+            # Prepare the text
+            text = f"ID: {unique_number}"
             
-            if font:
-                # Prepare the text
-                text = f"ID: {unique_number}"
-                
-                # Calculate text size and position
-                text_bbox = draw.textbbox((0, 0), text, font=font)
-                text_width, text_height = text_bbox[2] - text_bbox[0], text_bbox[3] - text_bbox[1]
-                x = (image.width - text_width) / 2
-                y = 20  # 20 pixels from the top
-                
-                # Draw the text
-                draw.text((x, y), text, font=font, fill="black")
+            # Calculate text size and position
+            text_bbox = draw.textbbox((0, 0), text, font=font)
+            text_width = text_bbox[2] - text_bbox[0]
+            text_height = text_bbox[3] - text_bbox[1]
+            x = (image.width - text_width) / 2
+            y = 20  # 20 pixels from the top
+            
+            # Draw the text
+            draw.text((x, y), text, font=font, fill="black")
         
         # Save the anonymized image
         image.save(f"{output_path}_page_{i+1}.pdf")
@@ -260,7 +250,7 @@ def main():
                     file_progress_bar = st.progress(0)
                     full_name, email = anonymize_pdf(temp_pdf_path, output_path, unique_number, file_progress_bar)
                     
-                    applicant_data.append({"Unique Number": unique_number, "Applicant Name": full_name or "Unknown"})
+                    applicant_data.append({"ID": unique_number, "Applicant Name": full_name or "Unknown"})
                     
                     # Update overall progress
                     overall_progress_bar.progress((i + 1) / len(uploaded_files), text=f"{progress_text} {i+1}/{len(uploaded_files)}")
