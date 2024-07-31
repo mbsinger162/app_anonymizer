@@ -74,6 +74,7 @@ def generate_name_variations(full_name):
         f"{first_name[0]}.{last_name}",
         first_name,
         f"{last_name},",
+        f"{last_name}.",
         f"{last_name}'s",
         f"{last_name}*",    
         last_name,
