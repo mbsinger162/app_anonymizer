@@ -168,8 +168,9 @@ def anonymize_pdf(pdf_path, output_path, unique_number, progress_bar):
         # Check for name variations
         for j in range(len(words['text'])):
             for variation in name_variations:
-                # Check if the variation matches starting from this word
-                if ' '.join(words['text'][j:j+len(variation.split())]).lower() == variation.lower():
+                # Use a more flexible matching approach
+                current_text = ' '.join(words['text'][j:j+len(variation.split())])
+                if re.search(re.escape(variation).replace("\\'s", "'s?"), current_text, re.IGNORECASE):
                     # Calculate bounding box for the entire variation
                     x1 = min(words['left'][k] for k in range(j, j+len(variation.split())))
                     y1 = min(words['top'][k] for k in range(j, j+len(variation.split())))
